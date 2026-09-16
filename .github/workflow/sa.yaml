@@ -1,0 +1,38 @@
+name: Cloud Android NDK Build
+
+on:
+  push:
+    branches: [ "master" ] # مستودع LGLTeam يعتمد على فرع master كفرع رئيسي
+  workflow_dispatch: # يتيح لك تشغيل البناء يدوياً بضغطة زر من الموقع في أي وقت
+
+jobs:
+  build:
+    runs-on: ubuntu-latest # البناء يتم داخل سيرفر لينكس سحابي فائق السرعة
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'zulu'
+        java-version: '17'
+
+    - name: Setup Android NDK
+      uses: nttld/setup-ndk@v1
+      with:
+        ndk-version: r25c # إصدار الـ NDK المستقر والمتوافق مع مكتبات الـ Hooking مثل Dobby
+        link-to-sdk: true
+
+    - name: Make Gradle Executable
+      run: chmod +x gradlew
+
+    - name: Compile C++ and Build APK
+      run: ./gradlew assembleDebug # تشغيل عملية الـ Compile وصهر الـ C++ مع الجافا
+
+    - name: Upload Finished APK
+      uses: actions/upload-artifact@v4
+      with:
+        name: FreeFire-ModMenu
+        path: app/build/outputs/apk/debug/app-debug.apk # المسار النهائي للملف المترجم بعد الـ Build
