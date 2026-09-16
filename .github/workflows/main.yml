@@ -2,12 +2,12 @@ name: Cloud Android NDK Build
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "main" ] # تم التغيير إلى main ليتوافق مع مستودعك الحالي بالضبط
   workflow_dispatch:
 
 jobs:
   build:
-    runs-on: ubuntu-latest # تشغيل البيئة الافتراضية العادية
+    runs-on: ubuntu-latest
 
     steps:
     - name: Checkout Code
@@ -26,10 +26,10 @@ jobs:
         link-to-sdk: true
 
     - name: Make Gradle Executable
-      run: chmod +x gradlew # تهيئة صلاحيات الملف المحلي الافتراضي للمشروع
+      run: chmod +x gradlew
 
     - name: Compile C++ and Build APK
-      run: ./gradlew assembleDebug # تشغيل أمر البناء العادي والافتراضي للمستودع
+      run: ./gradlew assembleDebug
       
     - name: Upload Finished APK
       uses: actions/upload-artifact@v4
